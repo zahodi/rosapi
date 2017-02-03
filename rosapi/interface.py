@@ -1,15 +1,17 @@
 #!/usr/bin/env python
-import RosAPI
 
-class MikInterface():
-  def __init__(self, interface):
-    self.path = interface
 
-  def checkinterface():
-    interface = RosAPI.talk([b'/interface/print', b"=.proplist=name,.id,type"])
-    ####################################################
-    # To Do:
-    # * Verify that interface is present
-    # * Only respond with the specific interface details
-    #####################################################
-    return interface
+class Interface():
+  def __init__(self, api, interface):
+    self.interface_name = interface
+    self.api = api
+
+  def checkinterface(self):
+    intExists = False
+    interface = self.api.talk([
+        b'/interface/print',
+        b"?=name=" +
+        self.interface_name])
+    if self.interface_name == interface[0][1]['default-name']:
+      intExists = True
+    return intExists
